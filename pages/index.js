@@ -8,16 +8,17 @@ import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
 
 const index = () => {
-  const { isLoading, currentUser } = useAuthContext()
-  const signOut = async () => {
-    await signOutUSer(auth);
-  }
   const router = useRouter();
+  const { isLoading, currentUser } = useAuthContext();
   useEffect(() => {
     if (!isLoading && !currentUser) {
       router.push('/login')
     }
   }, [isLoading, currentUser])
+  const signOut = async () => {
+    await signOutUSer(auth);
+  }
+
   return !currentUser ? <Loader /> : (
     <div className='bg-c1 flex h-[100vh]'>
       <div className='w-full shrink-0 flex'>
