@@ -22,7 +22,7 @@ const index = () => {
   return !currentUser ? <Loader /> : (
     <div className='bg-c1 flex h-[100vh]'>
       <div className='w-full shrink-0 flex'>
-        <LeftNav />
+        <LeftNav signOut={signOut} />
         <div className="flex grow bg-c2">
           <div>sidebar</div>
           <div>chat</div>

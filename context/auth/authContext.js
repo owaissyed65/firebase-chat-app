@@ -20,12 +20,15 @@ const AuthContext = ({ children }) => {
         const docUser = await getDoc(doc(db, 'users', user.uid));
         dispatch({ type: 'LOAD_FALSE_AND_ADD_USER', payload: { user: docUser.data() } })
     }
+    const setCurrentUser = (obj) => {
+        dispatch({ type: 'UPDATEDOC', payload: { obj } })
+    }
     useEffect(() => {
         const unSubscribe = onAuthStateChanged(auth, authStateChanged)
         return () => unSubscribe()
     }, []);
     return (
-        <Context.Provider value={{ ...state }}>
+        <Context.Provider value={{ ...state, setCurrentUser }}>
             {children}
         </Context.Provider>
     )
