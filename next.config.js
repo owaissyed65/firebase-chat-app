@@ -8,6 +8,9 @@ const nextConfig = {
   },
   devIndicators:{
     buildActivity:false
+  },
+  images:{
+    domains:['firebasestorage.googleapis.com']
   }
 }
 

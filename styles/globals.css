@@ -32,18 +32,22 @@ body {
     scrollbar-color: #2e343d transparent;
     scrollbar-width: thin;
 }
+
 .scrollbar::-webkit-scrollbar {
     width: 8px;
     height: 6px;
 }
+
 .scrollbar::-webkit-scrollbar-track {
     background: transparent;
 }
+
 .scrollbar::-webkit-scrollbar-thumb {
     background-color: transparent;
     border-radius: 10px;
     opacity: 0;
 }
+
 .scrollbar:hover::-webkit-scrollbar-thumb {
     background-color: #2e343d;
     opacity: 1;
@@ -52,6 +56,7 @@ body {
 #ReactSimpleImageViewer {
     z-index: 99;
 }
+
 #ReactSimpleImageViewer .react-simple-image-viewer__close {
     width: 40px;
     height: 40px;
@@ -63,4 +68,8 @@ body {
     line-height: 36px;
     text-align: center;
     padding-bottom: 10px;
+}
+
+.hide-scroll::-webkit-scrollbar {
+    display: none;    
 }

@@ -10,15 +10,56 @@ import Icon from './Icon'
 import { profileColors } from '@/utils/constants'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { auth, db } from '@/firebase/firebase'
+import { auth, db, storage } from '@/firebase/firebase'
 import { doc, updateDoc } from 'firebase/firestore'
 import { updateProfile } from 'firebase/auth'
+import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
+import Popup from './popup/UserPopup'
 
 const LeftNav = ({ signOut }) => {
   const userStill = auth.currentUser;
-  const { currentUser: user, setCurrentUser } = useAuthContext()
+  const { currentUser: user, setCurrentUser, bar } = useAuthContext()
+  // console.log(user)
   const [editName, setEditName] = useState(false);
+  const [popUp, setPopUp] = useState(false);
   const [edit, setEdit] = useState(false)
+  const updoadImageToFirestore = (file) => {
+    try {
+      if (file) {
+        const storageRef = ref(storage, user.displayName);
+        const uploadTask = uploadBytesResumable(storageRef, file);
+        uploadTask.on('state_changed',
+          (snapshot) => {
+            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            bar(Math.floor(progress))
+            console.log('Upload is ' + progress + '% done');
+            switch (snapshot.state) {
+              case 'paused':
+                console.log('Upload is paused');
+                break;
+              case 'running':
+                console.log('Upload is running');
+                break;
+            }
+          },
+          (error) => {
+            console.error(error)
+          },
+          () => {
+            getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+              console.log('File available at', downloadURL);
+              handleUpdateProfile('photo', downloadURL);
+              await updateProfile(userStill, {
+                profileURL: downloadURL
+              })
+            });
+          }
+        );
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
   const handleUpdateProfile = (type, value) => {
     const currentUser = { ...user };
     switch (type) {
@@ -45,7 +86,7 @@ const LeftNav = ({ signOut }) => {
           setCurrentUser(currentUser)
           if (type === 'photo-remove') {
             await updateProfile(userStill, {
-              photoURL: null
+              profileURL: null
             })
           }
           if (type === 'name') {
@@ -81,8 +122,6 @@ const LeftNav = ({ signOut }) => {
     const KeyDown = (e) => {
       if (e.key === 'Enter' && e.keyCode === 13) {
         e.preventDefault()
-      } else {
-
       }
     }
 
@@ -100,12 +139,13 @@ const LeftNav = ({ signOut }) => {
           <div className='w-full h-full absolute top-0 justify-center items-center hidden group-hover:flex rounded-full bg-black/[0.5]'>
             <label htmlFor="ADDINPUTPIC" className='cursor-pointer'>
               {
-                user?.photoURL ? <MdPhotoCamera size={34} /> : <MdAddAPhoto size={34} />
+                user?.profileURL ? <MdPhotoCamera size={34} /> : <MdAddAPhoto size={34} />
               }
+
             </label>
-            <input type="file" id='ADDINPUTPIC' className='hidden' />
-            {user?.photoURL && <div className='w-6 h-6 absolute bottom-0 right-0 justify-center items-center hidden group-hover:flex rounded-full bg-red-500'>
-              <MdDeleteForever size={14} />
+            <input type="file" id='ADDINPUTPIC' className='hidden' onChange={(e) => { updoadImageToFirestore(e.target.files[0]) }} />
+            {user?.profileURL && <div className='w-6 h-6 absolute bottom-0 right-0 justify-center items-center hidden group-hover:flex rounded-full bg-red-500'>
+              <MdDeleteForever size={14} onClick={() => { handleUpdateProfile('photo-remove') }} />
             </div>}
           </div>
 
@@ -140,13 +180,14 @@ const LeftNav = ({ signOut }) => {
             }
           </div>
         </div>
+
       </div>
     )
   }
 
   return (
 
-    <div className={`${edit ? 'w-[350px]' : 'w-[80px] items-center'}  flex flex-col justify-between py-5 shrink-0 transition-all`}>
+    <div className={`${edit ? 'w-[350px]' : 'w-[80px] items-center'}  flex flex-col justify-between py-5 shrink-0 transition-all overflow-y-auto  [&::-webkit-scrollbar]:hidden`}>
 
       {
         edit ? (
@@ -167,7 +208,7 @@ const LeftNav = ({ signOut }) => {
           size='large'
           className={'bg-green-500 hover:bg-gray-600'}
           icons={<FiPlus size={24} />}
-          onClick={() => { }}
+          onClick={() => { setPopUp((prev) => !prev) }}
         />
         <Icon
           size='large'
@@ -176,6 +217,7 @@ const LeftNav = ({ signOut }) => {
           onClick={signOut}
         />
       </div>
+      {popUp && <Popup onHide={() => { setPopUp((prev) => !prev) }} title='Find User' />}
     </div>
   )
 }
