@@ -1,10 +1,11 @@
-import { useContext, useEffect, useReducer, useState } from 'react'
-import Context from '../createContext'
+import { useContext, useEffect, useReducer, useState, createContext } from 'react'
 import authReducer from '../reducer/authReducer'
 import { onAuthStateChanged } from 'firebase/auth'
 import { auth, db } from '@/firebase/firebase'
 import { doc, getDoc, updateDoc } from 'firebase/firestore'
 
+
+const Context = createContext()
 const AuthContext = ({ children }) => {
     const initialState = {
         currentUser: null,
