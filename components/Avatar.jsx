@@ -10,7 +10,7 @@ const Avatar = ({ size, user, onClick }) => {
     return (
         <div className={`${c} rounded-full flex items-center justify-center text-base shrink-0 relative`} style={{ backgroundColor: user?.profileColor }}>
             {user?.isOnline &&
-                (size === 'small' || size === 'medium' || size === 'x-large' ? <div className='w-[10px] h-[10px] rounded-full bg-green-500 absolute bottom-0 right-[2px]'></div> : '')
+                (size === 'small' || size === 'medium' || size === 'x-large' ||size==='large'? <div className='w-[10px] h-[10px] rounded-full bg-green-500 absolute bottom-0 right-[2px]'></div> : '')
             }
             {
                 user?.profileURL ? (

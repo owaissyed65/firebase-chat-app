@@ -69,9 +69,9 @@ const UserPopup = (props) => {
     // }, [search])
     return (
         <PopupWrapper {...props}>
-            <Search />
-            <div className='mt-5 flex flex-col grow relative scrollbar'>
-                <div className="absolute w-full ">
+            <Search onHide={props.onHide} />
+            <div className='mt-5 flex flex-col grow relative h-[300px] overflow-y-auto scrollbar'>
+                <div className="absolute w-full">
                     {/* <div className='w-full rounded-2xl h-9 mb-3 '>
                         <input type="text" className='outline-none border-none bg-c2 text-c3 w-full h-full ' placeholder='Search here' onChange={handleSearch} />
                     </div> */}
