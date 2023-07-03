@@ -16,7 +16,7 @@ const ChatContext = ({ children }) => {
                 return {
                     ...state,
                     user: action.payload,
-                    chatId: currentUser.uid > action.payload.uid ? currentUser.uid + action.payload.uid : action.payload.uid + currentUser.uid
+                    chatId: currentUser.uid > action?.payload?.uid ? currentUser.uid + action?.payload?.uid : action?.payload?.uid + currentUser.uid
                 }
             default:
                 return state
@@ -24,9 +24,11 @@ const ChatContext = ({ children }) => {
     }
 
     const [state, dispatch] = useReducer(chatReducer, initialState)
-    const [users, setUsers] = useState(false)
+    const [users, setUsers] = useState({})
+    const [chats, setChats] = useState([])
+    const [selectedChat, setSelectedChat] = useState(null)
     return (
-        <Context.Provider value={{ ...state, users, setUsers, dispatch }}>
+        <Context.Provider value={{ ...state, users, setUsers, dispatch ,selectedChat, setSelectedChat,chats, setChats}}>
             {children}
         </Context.Provider>
     )
