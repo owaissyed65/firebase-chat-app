@@ -32,7 +32,7 @@ To set up and run the application locally, follow these steps:
 </ul>
 <br/>
 
-<h3>Usage<h3>
+<h3>Usage</h3>
 <ul>
 <li>Sign up or log in to the application using your credentials.</li>
 <li>Explore the available features, such as sending messages, changing profile pictures, and searching for other users.</li>

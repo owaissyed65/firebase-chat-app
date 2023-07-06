@@ -6,17 +6,20 @@ import Avatar from '../Avatar'
 import { doc, getDoc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore'
 import { db } from '@/firebase/firebase'
 import Search from '../Search'
+import Image from 'next/image'
 
 const UserPopup = (props) => {
     const { currentUser } = useAuthContext()
     const { users, dispatch } = useChatContext()
-    // const [search, setSearch] = useState('')
+    const [load, setLoad] = useState(false)
     const handleChat = async (users) => {
-        if (users.uid === currentUser.uid) {
+            if (users.uid === currentUser.uid) {
+                setLoad(false)
             alert("Sorry You can't connect with same credentials")
             return
         }
         try {
+            setLoad(true)
             let combineID = currentUser.uid > users.uid ? currentUser.uid + users.uid : users.uid + currentUser.uid;
             let res = await getDoc(doc(db, 'chats', combineID))
             if (!res.exists()) {
@@ -54,6 +57,7 @@ const UserPopup = (props) => {
             } else {
                 // if chats of clicking user is exists 
             }
+            setLoad(false)
             dispatch({ type: 'CHANGE_USER', payload: users })
             props.onHide()
         } catch (error) {
@@ -75,6 +79,7 @@ const UserPopup = (props) => {
                     {/* <div className='w-full rounded-2xl h-9 mb-3 '>
                         <input type="text" className='outline-none border-none bg-c2 text-c3 w-full h-full ' placeholder='Search here' onChange={handleSearch} />
                     </div> */}
+
                     {users && Object.values(users)?.map((user, i) => (
                         <div className={`flex items-center gap-4 rounded-xl hover:bg-c5 py-2 px-4 cursor-pointer`}
                             onClick={() => handleChat(user)} key={user.uid} >
@@ -91,6 +96,18 @@ const UserPopup = (props) => {
                     ))}
                 </div>
             </div>
+            {load && <div className='fixed top-0 left-0 w-full h-full flex justify-center items-center z-[24]'>
+                <div className='absolute glass-effect w-full h-full'></div>
+                <div className='relative flex justify-center items-center' >
+                    <Image
+                        width={70}
+                        height={70}
+                        src={'/loader.svg'}
+                        alt='Loading...'
+
+                    />
+                </div>
+            </div>}
         </PopupWrapper>
     )
 }

@@ -15,6 +15,7 @@ import { doc, updateDoc } from 'firebase/firestore'
 import { updateProfile } from 'firebase/auth'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
 import Popup from './popup/UserPopup'
+import Image from 'next/image'
 
 const LeftNav = ({ signOut }) => {
   const userStill = auth.currentUser;
@@ -23,9 +24,11 @@ const LeftNav = ({ signOut }) => {
   const [editName, setEditName] = useState(false);
   const [popUp, setPopUp] = useState(false);
   const [edit, setEdit] = useState(false)
+  const [getLoad, setLoad] = useState(false)
   const updoadImageToFirestore = (file) => {
     try {
       if (file) {
+        setLoad(true)
         const storageRef = ref(storage, user.displayName);
         const uploadTask = uploadBytesResumable(storageRef, file);
         uploadTask.on('state_changed',
@@ -46,6 +49,7 @@ const LeftNav = ({ signOut }) => {
             console.error(error)
           },
           () => {
+            setLoad(false)
             getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
               console.log('File available at', downloadURL);
               handleUpdateProfile('photo', downloadURL);
@@ -72,10 +76,11 @@ const LeftNav = ({ signOut }) => {
       case 'photo':
         currentUser.profileURL = value;
         break;
-      case 'photo-remove':
+      case 'photo-remove':   
         currentUser.profileURL = null;
         break;
       default:
+        
         break;
     }
     try {
@@ -218,6 +223,18 @@ const LeftNav = ({ signOut }) => {
         />
       </div>
       {popUp && <Popup onHide={() => { setPopUp((prev) => !prev) }} title='Find User' />}
+      {getLoad && <div className='fixed top-0 left-0 w-full h-full flex justify-center items-center z-[24]'>
+        <div className='absolute glass-effect w-full h-full'></div>
+        <div className='relative flex justify-center items-center' >
+          <Image
+            width={70}
+            height={70}
+            src={'/loader.svg'}
+            alt='Loading...'
+
+          />
+        </div>
+      </div>}
     </div>
   )
 }

@@ -1,5 +1,6 @@
 
 import Chat from '@/components/Chat'
+import Chats from '@/components/Chats'
 import LeftNav from '@/components/LeftNav'
 import Loader from '@/components/Loader'
 import { useAuthContext } from '@/context/auth/authContext'
@@ -38,9 +39,9 @@ const index = () => {
           <LeftNav signOut={signOut} />
           <div className="flex grow bg-c2">
             <div className='w-[400px] overflow-auto shrink-0 p-5 scrollbar border-r border-white/[0.05]'>
-              <div className='flex flex-col h-full'><Chat/> </div>
+              <div className='flex flex-col h-full'><Chats/> </div>
             </div>
-            <div>chat</div>
+            <Chat/>
           </div>
         </div>
       </div>
