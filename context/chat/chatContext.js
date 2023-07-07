@@ -27,8 +27,15 @@ const ChatContext = ({ children }) => {
     const [users, setUsers] = useState({})
     const [chats, setChats] = useState([])
     const [selectedChat, setSelectedChat] = useState(null)
+    const [inputText, setInputText] = useState("")
+    const [attachment, setAttachment] = useState([])
+    const [attachmentPreview, setAttachmentPreview] = useState(null)
+    const [editMsg, seteditMsg] = useState(null)
+    const [isTyping, setIsTyping] = useState(null)
+    const [imageViewer, setImageViewer] = useState(null)
+
     return (
-        <Context.Provider value={{ ...state, users, setUsers, dispatch ,selectedChat, setSelectedChat,chats, setChats}}>
+        <Context.Provider value={{ ...state, users, setUsers, dispatch, selectedChat, setSelectedChat, chats, setChats, inputText, setInputText, attachment, setAttachment, attachmentPreview, setAttachmentPreview, editMsg, seteditMsg, isTyping, setIsTyping, imageViewer, setImageViewer }}>
             {children}
         </Context.Provider>
     )
