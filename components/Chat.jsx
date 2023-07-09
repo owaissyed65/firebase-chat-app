@@ -7,14 +7,15 @@ import ChatFooter from './ChatFooter'
 
 
 const Chat = () => {
-  const { user: specificUser, chatId, selectedChat, users } = useChatContext()
+  const { user: specificUser, chatId, selectedChat, users, chats } = useChatContext()
+
   return (
     <div className='relative w-full h-full flex flex-col'>
       <ChatHeader />
       <Messages />
       <ChatFooter />
       {/* for loading */}
-      {!specificUser && !chatId && !selectedChat && <div className='absolute top-0 right-0 w-full h-full flex justify-center items-center'>
+      {!specificUser && !chatId && !selectedChat && Object.values(chats || {})?.length > 0 && <div className='absolute top-0 right-0 w-full h-full flex justify-center items-center'>
         <Image
           width={70}
           height={70}

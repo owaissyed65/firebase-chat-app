@@ -99,7 +99,7 @@ const Chats = () => {
                                         <div className='font-medium'>{user?.displayName}</div>
                                         <div className='text-c3 text-xs'>{formateDate(date)}</div>
                                     </span>
-                                    <p className='text-sm text-c3 line-clamp-1 break-all w-[80%]'>{data?.[1]?.lastMessage?.text|| data?.[1]?.lastMessage?.pic && "Image" || `Initialized Message With ${user?.displayName}`}</p>
+                                    <p className='text-sm text-c3 line-clamp-1 break-all w-[80%]'>{data?.[1]?.lastMessage?.text|| data?.[1]?.lastMessage?.image && "Image" || `Initialized Message With ${user?.displayName}`}</p>
                                     <div className='w-[20px] h-[20px] rounded-full flex justify-center items-center bg-pink-500 absolute right-0 bottom-0 text-[14px]'>4</div>
                                 </div>
                             </li>
