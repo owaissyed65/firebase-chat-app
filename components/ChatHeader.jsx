@@ -7,7 +7,7 @@ import { IoEllipsisVerticalSharp } from 'react-icons/io5'
 import ChatMenu from './ChatMenu'
 const ChatHeader = () => {
     const [showMenu, setShowMenu] = useState(false)
-    const { user: specificUser, chatId, selectedChat, users } = useChatContext()
+    const { user: specificUser, users } = useChatContext()
     const user = users[specificUser?.uid]
     const isOnline = users[specificUser?.uid]?.isOnline
     return (

@@ -12,6 +12,7 @@ const UserPopup = (props) => {
     const { currentUser } = useAuthContext()
     const { users, dispatch } = useChatContext()
     const [load, setLoad] = useState(false)
+    
     const handleChat = async (users) => {
             if (users.uid === currentUser.uid) {
                 setLoad(false)
