@@ -20,6 +20,8 @@ const ChatContext = ({ children }) => {
               ? currentUser.uid + action?.payload?.uid
               : action?.payload?.uid + currentUser.uid,
         };
+      case "EMPTY":
+        return initialState;
       default:
         return state;
     }
@@ -65,7 +67,7 @@ const ChatContext = ({ children }) => {
         setIsTyping,
         imageViewer,
         setImageViewer,
-        resetFooterStats
+        resetFooterStats,
       }}
     >
       {children}

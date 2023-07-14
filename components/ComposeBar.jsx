@@ -4,6 +4,7 @@ import { db, storage } from "@/firebase/firebase";
 import {
   Timestamp,
   arrayUnion,
+  deleteField,
   doc,
   getDoc,
   serverTimestamp,
@@ -105,6 +106,7 @@ const ComposeBar = () => {
       await updateDoc(doc(db, "userChats", user?.uid), {
         [chatId + ".lastMessage"]: msg,
         [chatId + ".date"]: serverTimestamp(),
+        [chatId + ".chatDeleted"]: deleteField(),
       });
       setAttachment(null);
       setAttachmentPreview(null);

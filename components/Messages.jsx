@@ -35,7 +35,8 @@ const Messages = () => {
         ?.filter((m) => {
           return (
             m?.deletedInfo?.[currentUser?.uid] !== DELETED_FOR_ME &&
-            !m?.deletedInfo?.deletedForEveryOne
+            !m?.deletedInfo?.deletedForEveryOne &&
+            !m?.deleteChatInfo?.[currentUser?.uid]
           );
         })
         .map((m) => {

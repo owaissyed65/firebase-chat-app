@@ -4,27 +4,37 @@ import React, { useEffect } from "react";
 import ChatHeader from "./ChatHeader";
 import Messages from "./Messages";
 import ChatFooter from "./ChatFooter";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { db } from "@/firebase/firebase";
+import { useAuthContext } from "@/context/auth/authContext";
 
 const Chat = () => {
-  const {
-    user: specificUser,
-    chatId,
-    selectedChat,
-    users,
-    chats,
-  } = useChatContext();
+  const { user, chatId, selectedChat, users, chats } = useChatContext();
 
-  
+  const { currentUser } = useAuthContext();
 
+  const isUserBlocked = users[currentUser?.uid]?.blockedUsers?.find(
+    (u) => u === user?.uid
+  );
+  const iAmBlocked = users[user?.uid]?.blockedUsers?.find(
+    (u) => u === currentUser?.uid
+  );
   return (
     <div className="relative w-full h-full flex flex-col">
       <ChatHeader />
-      <Messages />
-      <ChatFooter />
+      {chatId && <Messages />}
+      {!isUserBlocked && !iAmBlocked && <ChatFooter />}
+
+      {isUserBlocked && (
+        <div className="w-full text-center py-5 text-c3">
+          {user?.displayName} has been blocked{" "}
+        </div>
+      )}
+      {iAmBlocked && (
+        <div className="w-full text-center py-5 text-c3">
+          {user?.displayName} has blocked you{" "}
+        </div>
+      )}
       {/* for loading */}
-      {!specificUser &&
+      {!user &&
         !chatId &&
         !selectedChat &&
         Object.values(chats || {})?.length > 0 && (

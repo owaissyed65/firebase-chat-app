@@ -34,9 +34,11 @@ const Chats = () => {
   const userRef = useRef(false);
   const [loading, setLoading] = useState(true);
   const [unreadMsg, setUnreadMsg] = useState(null);
+
   useEffect(() => {
     resetFooterStats();
   }, [chatId && chatId]);
+
   useEffect(() => {
     setLoading(true);
     onSnapshot(collection(db, "users"), (snapshot) => {
@@ -78,6 +80,7 @@ const Chats = () => {
     });
     return () => unsub();
   }, [chats, selectedChat]);
+
   useEffect(() => {
     setLoading(true);
     const getChat = () => {
@@ -92,16 +95,16 @@ const Chats = () => {
             userRef.current &&
             Object.values(users).length > 0
           ) {
-            const firstChat = Object.values(data)?.sort(
-              (a, b) => b.date - a.date
-            )[0];
+            const firstChat = Object.values(data)
+            .sort((a, b) => b.date - a.date)[0];
             if (firstChat) {
               const user1 = users[firstChat.userInfo.uid];
               let combineId =
                 currentUser?.uid > user1?.uid
                   ? currentUser.uid + user1?.uid
                   : user1?.uid + currentUser.uid;
-              await handleSelect(user1, combineId);
+              handleSelect(user1);
+              readChat(combineId);
             }
             forwardRef.current = true;
           }
@@ -110,8 +113,10 @@ const Chats = () => {
     };
     currentUser.uid && getChat();
   }, [forwardRef.current, users]);
+
   const filterChats = Object.entries(chats || {})
     .sort((a, b) => b[1].date - a[1].date)
+    ?.filter(([, user]) => !user?.hasOwnProperty("chatDeleted"))
     .filter(([, user]) =>
       user?.userInfo.displayName
         .toLowerCase()
@@ -126,6 +131,7 @@ const Chats = () => {
       readChat(selectedChatId);
     }
   };
+
   const readChat = async (chatId) => {
     const chatRef = doc(db, "chats", chatId);
     const chatDoc = await getDoc(chatRef);
